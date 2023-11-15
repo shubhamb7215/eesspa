@@ -1,0 +1,26 @@
+Configuration loaded                                builds=0 max_builds=1
+listen_address not defined, metrics & debug endpoints disabled  builds=0 max_builds=1
+[session_server].listen_address not defined, session endpoints disabled  builds=0 max_builds=1
+Initializing executor providers                     builds=0 max_builds=1
+Checking for jobs... received                       job=395 repo_url=http://44.206.55.194/santosh/employeeapplication.git runner=ykZJRJyX8
+Added job to processing list                        builds=1 job=395 max_builds=1 project=65 repo_url=http://44.206.55.194/santosh/employeeapplication.git
+Appending trace to coordinator...ok                 code=202 job=395 job-log=0-3299 job-status=running runner=ykZJRJyX8 sent-log=0-3298 status=202 Accepted update-interval=3s
+Appending trace to coordinator...ok                 code=202 job=395 job-log=0-4007 job-status=running runner=ykZJRJyX8 sent-log=3299-4006 status=202 Accepted update-interval=3s
+Updating job...                                     bytesize=4007 checksum=crc32:3b298f2c job=395 runner=ykZJRJyX8
+Submitting job to coordinator...ok                  bytesize=4007 checksum=crc32:3b298f2c code=200 job=395 job-status= runner=ykZJRJyX8 update-interval=0s
+Appending trace to coordinator...ok                 code=202 job=395 job-log=0-5584 job-status=running runner=ykZJRJyX8 sent-log=4007-5583 status=202 Accepted update-interval=3s
+Job succeeded                                       duration_s=39.649948653 job=395 project=65 runner=ykZJRJyX8
+Appending trace to coordinator...ok                 code=202 job=395 job-log=0-6333 job-status=running runner=ykZJRJyX8 sent-log=5584-6332 status=202 Accepted update-interval=3s
+Updating job...                                     bytesize=6333 checksum=crc32:5a855354 job=395 runner=ykZJRJyX8
+Submitting job to coordinator...ok                  bytesize=6333 checksum=crc32:5a855354 code=200 job=395 job-status= runner=ykZJRJyX8 update-interval=0s
+Removed job from processing list                    builds=0 job=395 max_builds=1 project=65 repo_url=http://44.206.55.194/santosh/employeeapplication.git
+Checking for jobs... received                       job=396 repo_url=http://44.206.55.194/santosh/employeeapplication.git runner=ykZJRJyX8
+Added job to processing list                        builds=1 job=396 max_builds=1 project=65 repo_url=http://44.206.55.194/santosh/employeeapplication.git
+WARNING: Job failed: exit status 1
+                 duration_s=0.315409338 job=396 project=65 runner=ykZJRJyX8
+Appending trace to coordinator...ok                 code=202 job=396 job-log=0-920 job-status=running runner=ykZJRJyX8 sent-log=0-919 status=202 Accepted update-interval=3s
+Updating job...                                     bytesize=920 checksum=crc32:0efefd00 job=396 runner=ykZJRJyX8
+Submitting job to coordinator...ok                  bytesize=920 checksum=crc32:0efefd00 code=200 job=396 job-status= runner=ykZJRJyX8 update-interval=0s
+Removed job from processing list                    builds=0 job=396 max_builds=1 project=65 repo_url=http://44.206.55.194/santosh/employeeapplication.git
+WARNING: Failed to process runner                   builds=0 error=exit status 1 executor=shell max_builds=1 runner=ykZJRJyX8
+

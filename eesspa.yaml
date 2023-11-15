@@ -1,0 +1,705 @@
+---
+openapi: "3.0.2"
+info:
+  title: "EcoStruxure™ Energy & Sustainability Scoring Partner API"
+  description: "# Overview\n\nEcoStruxure™ Energy and Sustainability Scoring Partner\
+    \ API allows Building Performance Score Providers to collect, manage and benchmark\
+    \ buildings measurement data in order to deliver energy and sustainability performance\
+    \ scores to Schneider Electric customers registered with scoring partner application.\n\
+    \n## API overview and usage\n\nThis API enables the following features:\n\n\n\
+    **Sites Metadata**\n- Retrieve all sites belonging to which the connected user\
+    \ has access, along site metadata needed for performance scores calculation (e.g.\
+    \ gross area, building occupants, operating hours, etc)\n\n\n**Meters and Measurement\
+    \ Types**\n- Retrieve all meters installed at a given site, including the list\
+    \ of measurements and units they support\n\n**Sites Registration**\n- Allow the\
+    \ Scoring Partner, to register a site providing the scores related details and\
+    \ thus starting automatically a data pipeline to collect all timeseries related\
+    \ information\n\n**Timeseries**\n- Retrieve all timeseries for any given site\
+    \ and for an arbitrary time period\n- Room comfort data: zone temperature, humidity,\
+    \ CO2\n- Waste Management: waste diverted and waste generated\n- Energy consumption:\
+    \ electricity and fuel consumption\n\n**Performance Scores**\n* Provide Performance\
+    \ Scores for a given site and read current and historical scores\n* Supported\
+    \ Types: Daily, Monthly, Average, Local Average \n* Supported Categories: Electricity,\
+    \ Fuel, Water, Waste, Human Experience\n\n## Catalog\n\nMeter Commodity and Meter\
+    \ Usage per commodity catalog\n\n<details>\n  <summary>Meter Commodity</summary>\n\
+    \n| Commodity        | Unit Type Name    | Unit Type Symbol |\n| ----------------\
+    \ | ----------------- | ---------------- |\n| Electricity      | kilo watt hour\
+    \    | kWh              |\n| Fuel             | cubic meter       | m³       \
+    \        |\n| Waste            | kilogram          | kg               |\n| Water\
+    \            | cubic meter       | m³               |\n| Human Experience/Air\
+    \ Quality | parts per million | ppm              |\n</details>\n\n<details>\n\
+    \  <summary>Commodity Usage Type</summary>\n\n| Commodity        | Usage     \
+    \                                       |\n| ---------------- | ------------------------------------------------\
+    \ |\n| Electricity      | Purchased from Grid                              |\n\
+    | Electricity      | Generated offsite - renewable                    |\n| Electricity\
+    \      | Generated onsite - solar                         |\n| Fuel          \
+    \   | Diesel                                           |\n| Fuel             |\
+    \ District Hot Water                               |\n| Fuel             | District\
+    \ Chilled Water (Electric Driven Chiller) |\n| Fuel             | Biodiesel (B100)\
+    \                                 |\n| Fuel             | Liquefied Natural Gas\
+    \ (LPG)                      |\n| Fuel             | Natural Gas             \
+    \                         |\n| Fuel             | District Steam             \
+    \                      |\n| Fuel             | Fuel Oil                      \
+    \                   |\n| Waste            | Waste Generated                  \
+    \                |\n| Waste            | Waste Diverted                      \
+    \             |\n| Water            | Reclaimed onsite                       \
+    \          |\n| Water            | Municipality supplied potable water       \
+    \       |\n| Human Experience/Air Quality | CO2                              \
+    \                |\n| Human Experience/Air Quality | CO2 - Raw               \
+    \                         |\n</details>\n\n\n## How it works\n\nThis API works\
+    \ for any Schneider Electric customer who has an identity in Schneider Electric\
+    \ system, and site data associated with its identity.\n\nThe following steps will\
+    \ explain how the API works,\n\n**Step 1:** In order to access the customer data,\
+    \ the customer must identify themself and provide their consent to the scoring\
+    \ application.\n\n**Step 2:** Enquire all the sites which the customer is authorized\
+    \ to calculate the performance scores.\n\n**Step 3:** Enquire meters and timeseries\
+    \ measurements for a selected site.\n\n**Step 4:** Calculate the scores based\
+    \ on the building measurement data received from Schneider Electric.\n\n**Step\
+    \ 5:** Update the performance scores calculated for the given site back to Schneider\
+    \ Electric. \n\n\n![How it works](https://raw.githubusercontent.com/ecostruxure-openapi/public-images/main/energy-sustainability-scoring/how-it-works-new.png\
+    \ \"How it works\")\n\n\n# Documentation\n    \n## How to sign up\n    \n**Step\
+    \ 1:** [Register or login](https://exchange.se.com) with an Exchange account.\n\
+    \n**Step 2:** Subscribe to the [API product in our Shop](https://exchange.se.com).\n\
+    \n**Step 3:** After subscription, API credentials and usage details for the API\
+    \ are available in developer portal.\n\n## Authentication guide\n\nThis API supports\
+    \ the following authentication mechanism:\n\n**OAuth2 Authorization Code Flow**\n\
+    \ \n  Once subscription to the API is approved on [Exchange](https://exchange.se.com),\
+    \ API Subscription Client ID and Client Secret will be shared with the subscriber\n\
+    \ \n  The Client ID should be sent when calling the Authorize Endpoint to initiate\
+    \ the Authorization and Consent flow.\n  \n  Once user consents to the scopes\
+    \ requested by the client app, an authorization code will be issued which needs\
+    \ to be sent to the Token Endpoint with grant_type as *authorization_code*, along\
+    \ with Client ID and Client Secret in order to retrieve an access_token and a\
+    \ refresh_token. In order to retrieve a new access_token, call the Token endpoint\
+    \ with grant_type as *refresh_token* and pass the refresh_token issued before.\n\
+    \  \n  Each access_token is valid for 1 hour and has to be provided to every API\
+    \ call as HTTP Request Header `Authorization: Bearer {access_token}` \n\n\n![Authorization\
+    \ Code Flow](https://raw.githubusercontent.com/ecostruxure-openapi/public-images/main/energy-sustainability-scoring/authorization_flow.png\
+    \ \"Authorization Code Flow diagram\")\n\n## Sandbox Testing\n\n**What is Sandbox\
+    \ Test Data?**\n\nSandbox test data refers to simulated data that can be used\
+    \ for testing or validating an API without manipulating real production data.\
+    \ It provides a safe environment for developers to experiment with the API, test\
+    \ different scenarios and identify errors before deploying it to the production\
+    \ server.\n\n**Why is Sandbox Test Data Important?**\n\nWorking with live production\
+    \ data can be risky, especially during development and testing phases where unexpected\
+    \ changes can occur. Sandbox test data allows developers to create an isolated\
+    \ environment where they can test new features, fix bugs, and improve overall\
+    \ performance without causing any harm to the production data. This helps save\
+    \ time, money and minimizes the risk of introducing new issues into the production\
+    \ system.\n\nGet access token for sandbox testing using sandbox authorize endpoint\
+    \ mentioned below  \n\n> Sandbox authorize endpoint: https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/sandbox-authorize\n\
+    \n## Operations and Resource Model\n\n![Operations and Resource Model diagram](https://raw.githubusercontent.com/ecostruxure-openapi/public-images/main/energy-sustainability-scoring/open-esx-energy-scoring.diagram.png\
+    \ \"Operations and Resource Model diagram\")\n\n\n## Support\n\nContact our Exchange\
+    \ support team at exchange.support@se.com and include,\n\n    - Endpoint URL\n\
+    \    - Request/Response of the URL\n    - Any additional information like Screenshots,\
+    \ Postman collections\n\nGet help from the community [here](https://community.se.com/t5/Green-Building-Scoring-and/bd-p/green-building-certification).\n\
+    \n---"
+  version: "1.0.0"
+servers:
+- url: "https://se-exchange-uat-uat.apigee.net/ecostruxure/scoring/v1"
+tags:
+- name: "Site"
+  description: "Everything about your sites where the compatible EcoStruxure offers\
+    \ are deployed."
+- name: "Meter"
+  description: "Everything about your compatible EcoStruxure installed meters."
+- name: "Timeseries"
+  description: "Retrieve the timeseries metrics for a given site and time range."
+- name: "Performance Score"
+  description: "Everything about your energy and sustainability scores."
+paths:
+  /sites:
+    get:
+      summary: "Fetch sites"
+      description: "Retrieve all sites and related metadata"
+      operationId: "listSites"
+      tags:
+      - "Site"
+      responses:
+        "200":
+          description: "Found Sites"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Site"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Oauth2AuthCode:
+        - "read:site"
+      - Oauth2AuthCode-Sandbox:
+        - "read:site"
+  /sites/{site-id}/scoring-providers:
+    post:
+      summary: "Associate Scoring Application"
+      description: "Creates a scoring provider resource to associate a site"
+      operationId: "createSiteAssociation"
+      tags:
+      - "Performance Score"
+      parameters:
+      - name: "site-id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+          example: "a483d4-e5be-4521-9f92-5400f5"
+      requestBody:
+        description: "Scoring Provider resource to be created"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScoringProvider"
+      responses:
+        "201":
+          description: "Successfully Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScoringProvider"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Site Not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Oauth2AuthCode:
+        - "write:energy-score"
+  /sites/{site-id}/performance-scores:
+    get:
+      summary: "Fetch Performance Score"
+      description: "Retrieve all performance scores for a given site"
+      operationId: "listPerformanceScores"
+      tags:
+      - "Performance Score"
+      parameters:
+      - name: "site-id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+          example: "a483d4-e5be-4521-9f92-5400f5"
+      - name: "type"
+        in: "query"
+        schema:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "daily"
+            - "monthly"
+            - "localAverage"
+            - "average"
+            example: "daily"
+      - name: "category"
+        in: "query"
+        schema:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "energy"
+            - "water"
+            - "waste"
+            - "transportation"
+            - "humanExperience"
+            - "reEntry"
+            example: "energy"
+      responses:
+        "200":
+          description: "Found Scores"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PerformanceScore"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Site Not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Oauth2AuthCode:
+        - "read:energy-score"
+      - Oauth2AuthCode-Sandbox:
+        - "read:energy-score"
+    post:
+      summary: "Update Performance Score"
+      description: "Creates performance scores for a given site. Supports multiple\
+        \ categories (e.g. energy) and types (e.g. monthly)"
+      operationId: "createPerformanceScores"
+      tags:
+      - "Performance Score"
+      parameters:
+      - name: "site-id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+          example: "a483d4-e5be-4521-9f92-5400f5"
+      requestBody:
+        description: "Performance Score to be created"
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/PerformanceScore"
+      responses:
+        "201":
+          description: "Successfully Created"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PerformanceScore"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Site Not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Oauth2AuthCode:
+        - "write:energy-score"
+  /sites/{site-id}/meters:
+    get:
+      summary: "Fetch Meters"
+      description: "Retrieve all meters installed at a given site"
+      operationId: "listMeters"
+      tags:
+      - "Meter"
+      parameters:
+      - name: "site-id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+          example: "a483d4-e5be-4521-9f92-5400f5"
+      - name: "category"
+        in: "query"
+        required: false
+        schema:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "Electricity"
+            - "Fuel"
+            - "Water"
+            - "Waste"
+            - "Human Experience"
+            - "Gas"
+            - "Temperature"
+      responses:
+        "200":
+          description: "Found Meters"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Meter"
+        "404":
+          description: "Site Not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Oauth2AuthCode:
+        - "read:energy-performance"
+      - Oauth2AuthCode-Sandbox:
+        - "read:energy-performance"
+  /sites/{site-id}/timeseries:
+    get:
+      summary: "Fetch Timeseries"
+      description: "Get all building measurement data to calculate scores"
+      operationId: "listMetrics"
+      tags:
+      - "Timeseries"
+      parameters:
+      - name: "site-id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+          example: "a483d4-e5be-4521-9f92-5400f5"
+      - name: "updatedAt[gte]"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+          format: "date-time"
+      - name: "updatedAt[lt]"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+          format: "date-time"
+      - name: "category"
+        in: "query"
+        required: false
+        schema:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "Electricity"
+            - "Fuel"
+            - "Water"
+            - "Waste"
+            - "Human Experience"
+            - "Gas"
+            - "Temperature"
+      responses:
+        "200":
+          description: "Found Timeseries"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Timeserie"
+        "404":
+          description: "Site Not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - Oauth2AuthCode:
+        - "read:energy-performance"
+      - Oauth2AuthCode-Sandbox:
+        - "read:energy-performance"
+components:
+  securitySchemes:
+    Oauth2AuthCode:
+      type: "oauth2"
+      description: "OAuth2 Authorization flow"
+      flows:
+        authorizationCode:
+          authorizationUrl: "https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/authorize"
+          tokenUrl: "https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/token"
+          refreshUrl: "https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/token"
+          scopes:
+            read:site: "Read access to your site details"
+            read:energy-performance: "Read access to your site energy performance\
+              \ details"
+            write:energy-score: "Update access to your site energy score"
+            read:energy-score: "Read access to your site energy score"
+            offline_access: "Perform offline operations on behalf of the user"
+    Oauth2AuthCode-Sandbox:
+      type: "oauth2"
+      description: "OAuth2 Authorization flow"
+      flows:
+        authorizationCode:
+          authorizationUrl: "https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/sandbox-authorize"
+          tokenUrl: "https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/token"
+          refreshUrl: "https://se-exchange-uat-uat.apigee.net/ecostruxure/v1/oauth/token"
+          scopes:
+            read:site: "Read access to your site details"
+            read:energy-performance: "Read access to your site energy performance\
+              \ details"
+            read:energy-score: "Read access to your site energy score"
+  schemas:
+    Address:
+      type: "object"
+      title: "Address"
+      properties:
+        address:
+          type: "string"
+          example: "12 Baker Street"
+        city:
+          type: "string"
+          example: "London"
+        countryIsoCode:
+          type: "string"
+          example: "UK"
+        zipCode:
+          type: "string"
+          example: 3338
+        stateProvince:
+          type: "string"
+          example: "AZ"
+        timezone:
+          type: "string"
+          example: "GMT"
+        coordinates:
+          type: "object"
+          title: "Coordinates"
+          properties:
+            latitude:
+              type: "number"
+              example: 51.52
+            longitude:
+              type: "number"
+              example: -0.15
+            elevation:
+              type: "number"
+              example: 38
+    Site:
+      type: "object"
+      title: "Site"
+      properties:
+        id:
+          type: "string"
+          example: "ac64ac6a-abfd-4f5e-9d38-81102c0ca"
+        name:
+          type: "string"
+          example: "ACME Headquarters"
+        type:
+          type: "string"
+          example: "Retail"
+        sourceSystemId:
+          type: "integer"
+          example: 178654
+        metadata:
+          type: "object"
+          properties:
+            grossArea:
+              type: "integer"
+              example: 421
+            buildingOccupants:
+              type: "integer"
+              example: 49
+            daysPerWeekWithVisitors:
+              type: "integer"
+              example: 7
+            numberOfVisitorsPerDay:
+              type: "integer"
+              example: 548
+            visitDuration:
+              type: "number"
+              format: "double"
+              example: 0.0208
+            weeklyOperatingHours:
+              type: "integer"
+              example: 168
+        postalAddress:
+          $ref: "#/components/schemas/Address"
+    Error:
+      type: "object"
+      title: "Error"
+      description: "Error occurred while handling the request (based on rfc7807)"
+      properties:
+        type:
+          description: "A URI reference [RFC3986] that identifies the problem type."
+          type: "string"
+          format: "uri"
+        title:
+          description: "A short, human-readable summary of the problem type."
+          type: "string"
+        status:
+          description: "The HTTP status code ([RFC7231], Section 6) generated by the\
+            \ origin server for this occurrence of the problem."
+          type: "number"
+        instance:
+          description: "A URI reference that identifies the specific occurrence of\
+            \ the problem."
+          type: "string"
+        detail:
+          description: "A human-readable explanation specific to this occurrence of\
+            \ the problem."
+          type: "string"
+        debugging:
+          description: "Debugging information for DEV and QA environments."
+          type: "string"
+        invalid-params:
+          description: "An array of validation errors."
+          type: "array"
+          items:
+            description: "The validation error descriptor."
+            type: "object"
+            required:
+            - "path"
+            - "name"
+            - "reason"
+            properties:
+              path:
+                type: "string"
+              name:
+                type: "string"
+              reason:
+                type: "string"
+            additionalProperties: false
+          uniqueItems: true
+      required:
+      - "type"
+    ScoringProvider:
+      type: "object"
+      title: "Scoring Provider"
+      properties:
+        leedId:
+          type: "integer"
+          format: "int64"
+          example: 8000015697
+        leedName:
+          type: "string"
+          example: "ACME Headquarters"
+      required:
+      - "leedId"
+      - "leedName"
+    PerformanceScore:
+      type: "object"
+      title: "Performance Score"
+      properties:
+        date:
+          type: "string"
+          format: "date"
+        score:
+          type: "number"
+          example: 94.99
+        type:
+          type: "string"
+          enum:
+          - "daily"
+          - "monthly"
+          - "localAverage"
+          - "average"
+          example: "daily"
+        category:
+          type: "string"
+          enum:
+          - "energy"
+          - "water"
+          - "waste"
+          - "transportation"
+          - "humanExperience"
+          - "reEntry"
+          example: "energy"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+      required:
+      - "date"
+      - "score"
+      - "type"
+      - "category"
+    Measurement:
+      type: "object"
+      title: "Measurement"
+      properties:
+        id:
+          type: "string"
+          example: "1863"
+        name:
+          type: "string"
+          example: "Litres"
+        unit:
+          type: "string"
+          example: "L"
+        timeseries:
+          type: "object"
+          properties:
+            key:
+              type: "string"
+              example: "43b68619-7681-4458-bbd6-c4e38a0b202a"
+    Meter:
+      type: "object"
+      title: "Meter"
+      properties:
+        id:
+          type: "string"
+          example: "5e7a8353-2520-489c-bf68-1895d0ea8f24"
+        name:
+          type: "string"
+          example: "main_meter"
+        gatewayId:
+          type: "string"
+          example: "7a82-cds6-cw8f-klou"
+        commodity:
+          type: "string"
+          example: "Fuel"
+        usage:
+          type: "string"
+          example: "Diesel"
+        measurements:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Measurement"
+    Timeserie:
+      type: "object"
+      title: "Timeserie"
+      properties:
+        key:
+          type: "string"
+          example: "43b68619-7681-4458-bbd6-c4e38a0b202a"
+        values:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              date:
+                type: "string"
+                format: "date-time"
+              updatedAt:
+                type: "string"
+                format: "date-time"
+              value:
+                type: "number"
+                example: 992000
+x-tagGroups:
+- name: "API specification"
+  tags:
+  - "Site"
+  - "Meter"
+  - "Timeseries"
+  - "Performance Score"

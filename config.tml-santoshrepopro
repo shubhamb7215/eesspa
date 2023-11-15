@@ -1,0 +1,29 @@
+gitlab Runner config.toml
+
+concurrent = 1
+check_interval = 0
+shutdown_timeout = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "tekton"
+  url = "http://44.206.55.194"
+  id = 40
+  token = "glrt-621n25zTqX66sNF8DE36"
+  token_obtained_at = 2023-09-01T11:27:14Z
+  token_expires_at = 0001-01-01T00:00:00Z
+  executor = "shell"
+
+[[runners]]
+  name = "tekton-coe-test"
+  url = "http://44.206.55.194"
+  id = 41
+  token = "glrt-vsGAVFzoXednYXaLaDoo"
+  token_obtained_at = 2023-09-01T11:41:45Z
+  token_expires_at = 0001-01-01T00:00:00Z
+  executor = "shell"
+  [runners.cache]
+    MaxUploadedArchiveSize = 0
+~

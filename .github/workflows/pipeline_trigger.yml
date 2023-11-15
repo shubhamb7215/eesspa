@@ -1,0 +1,109 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repo-Name'
+        required: true
+      envspec:
+        description: 'Env-Name'
+        required: true
+
+
+jobs:  
+  build:
+    # The runner that the job will run on
+    runs-on: [self-hosted, Tekton]
+
+    # Steps - a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Use Data from workflow
+        run: |
+          echo "REPO_NAME=${{ github.event.inputs.repo }}" >> $GITHUB_ENV
+          echo "ENV_SPEC=${{ github.event.inputs.envspec }}" >> $GITHUB_ENV
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          repository: 'THBS-Europe/${{ env.REPO_NAME }}'
+          token: ${{ secrets.ORG_ADMIN_TOKEN }}
+             
+      - name: Use the value
+        run: |
+            ls -ltr
+            echo "We are defining project name"
+            echo "CI_PROJECT_NAME=${{ env.REPO_NAME }}" >> $GITHUB_ENV
+            echo "AZURE_SUBSCRIPTION_ID=${{ vars.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Shell_script
+        env:
+           AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+           AZURE_GROUP_NAME: ${{ vars.AZURE_GROUP_NAME }}
+           AZURE_API_SERVICE_NAME: ${{ vars.AZURE_API_SERVICE_NAME }}
+           ENV_SPEC: ${{ env.ENV_SPEC }}
+        
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+          
+          
+          echo "PATH "$PATH
+          echo "We are before echo"
+          
+          echo ${{ env.AZURE_GROUP_NAME }} ${{ env.AZURE_API_SERVICE_NAME }} ${CI_PROJECT_NAME}
+          echo "We are after echo"
+          whoami
+          export AZURE_SUBSCRIPTION_ID=$AZURE_SUBSCRIPTION_ID
+          export AZURE_GROUP_NAME=$AZURE_GROUP_NAME
+          export AZURE_API_SERVICE_NAME=$AZURE_API_SERVICE_NAME
+          pwd
+
+          export IP_ADDRESS_TO_ALLOW=$(yq eval '.filterIp.allowip' generate.yaml)
+          export IP_ADDRESS_TO_FORBID=$(yq eval '.filterIp.blockip' generate.yaml)
+          export CORS_ALLOWED_ORIGINS=$(yq eval '.allowedOrigins.origins' generate.yaml)
+          export CORS_ALLOW_CREDENTIALS=$(yq eval '.allowedOrigins.creds' generate.yaml)
+          export CORS_ALLOWED_METHODS=$(yq eval '.allowedOrigins.methods' generate.yaml)
+          export CORS_CACHE_PERIOD_MAX_SECONDS=$(yq eval '.allowedOrigins.maxSeconds' generate.yaml)
+          export CORS_ALLOWED_HEADERS=$(yq eval '.allowedOrigins.allowHeaders' generate.yaml)
+          export CORS_EXPOSE_HEADERS=$(yq eval '.allowedOrigins.exposeHeaders' generate.yaml)
+          export BACKEND_OAUTH_PROVIDER_URL=$(yq eval '.backendOauth.providerurl' generate.yaml)
+          export BACKEND_OAUTH_CLIENT_ID=$(yq eval '.backendOauth.clientid' generate.yaml)
+          export BACKEND_OAUTH_CLIENT_SECRET=$(yq eval '.backendOauth.clientsecret' generate.yaml)
+
+          export RATE_LIMIT_VALUE=$(yq eval '.azureRateLimit.noOfCalls' generate.yaml)
+          export RATE_RENEWAL_PERIOD=$(yq eval '.azureRateLimit.renewalPeriod' generate.yaml)
+          export RATE_LIMIT_COUNTER_KEY=$(yq eval '.azureRateLimit.counter' generate.yaml)
+
+  
+          export CACHE_DURATION=$(yq eval '.responseCache.timeDuration' generate.yaml)
+          export ACCEPT_HEADERS=$(yq eval '.cacheTime.acceptHeaders' generate.yaml)
+          
+          export HEADER_NAME=$(yq eval '.validateJWT.headerName' generate.yaml)
+          export FAILEDSTATUSCODE=$(yq eval '.validateJWT.failedStatusCode' generate.yaml)
+          export OPENIDURL=$(yq eval '.validateJWT.openIdURL' generate.yaml)
+          
+          export CLAIMS=$(yq eval '.validateJWT.requiredClaims.name' generate.yaml)
+          export CLAIMS_MATCH=$(yq eval '.validateJWT.requiredClaims.match' generate.yaml)
+          
+          export CORRELATIONID=$(yq eval '.corelation.correlationId' generate.yaml)
+          export TRACE=$(yq eval '.corelation.trace' generate.yaml)
+          export FAILEDSTATUSMESSAGE=$(yq -r '.validateJWT.failedStatusMessage' generate.yaml)
+          
+          export PRODUCTNAME=$(yq -r '.product.productName' generate.yaml)
+          export APILIST=$(yq -r '.product.apiList' generate.yaml)
+
+          
+          #az login --service-principal --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+
+          if [[ "${{ env.ENV_SPEC }}" == "PROD" ]]; then
+            az login --service-principal --username ${{ secrets.AZURE_USERNAME_PROD }} --password ${{ secrets.AZURE_PASSWORD_PROD }} --tenant ${{ secrets.AZURE_TENANT_ID_PROD }}
+          elif [[ "${{ env.ENV_SPEC }}" == "QA" ]]; then
+            az login --service-principal --username ${{ secrets.AZURE_USERNAME_QA }} --password ${{ secrets.AZURE_PASSWORD_QA }} --tenant ${{ secrets.AZURE_TENANT_ID_QA }}
+          fi
+
+           cp /home/github-selfhosted-runner/Dependency/scripts/*.sh . 
+           ls -ltr
+           sh deploy.sh
+    
+
